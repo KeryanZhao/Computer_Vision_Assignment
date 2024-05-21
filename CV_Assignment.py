@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 # kp = sift.detect(gray, None)
 # kp,des = sift.compute(gray,kp)
 # print(des[0])
+
 #
 # img=cv.drawKeypoints(gray,kp,img,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 #
@@ -45,8 +46,8 @@ import matplotlib.pyplot as plt
 # cv.waitKey(0)
 # cv.destroyAllWindows()
 
-img1 = cv.imread('left.png', cv.IMREAD_GRAYSCALE)  # queryImage
-img2 = cv.imread('right.png', cv.IMREAD_GRAYSCALE)  # trainImage
+img1 = cv.imread('left.png')  # queryImage
+img2 = cv.imread('right.png')  # trainImage
 
 # Initiate SIFT detector
 sift = cv.SIFT_create()
@@ -68,4 +69,5 @@ for m, n in matches:
 # cv.drawMatchesKnn expects list of lists as matches.
 img3 = cv.drawMatchesKnn(img1, kp1, img2, kp2, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
-plt.imshow(img3), plt.show()
+# 保存匹配结果图片
+cv.imwrite('matched_result.png', img3)
