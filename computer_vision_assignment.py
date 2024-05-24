@@ -1,7 +1,7 @@
 import numpy as np
 import imutils
 import cv2 as cv
-import argparse
+# import argparse
 
 class Sticher:
     def harries_corner_dector(self, image):
@@ -100,52 +100,52 @@ class Sticher:
 
 
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-f", "--first", required=True, help="path to the first image")
-ap.add_argument("-s", "--second", required=True, help="path to the second image")
-args = vars(ap.parse_args())
-
-imageA = cv.imread(args["first"])
-imageB = cv.imread(args["second"])
-# imageA = imutils.resize(imageA, width=400)
-# imageB = imutils.resize(imageB, width=400)
-stitcher = Sticher()
-imageA_corners, imageA_harried = stitcher.harries_corner_dector(imageA.copy())
-imageB_corners, imageB_harried = stitcher.harries_corner_dector(imageB.copy())
-imageA_SIFT, imageA_SIFT_keypoints, imageA_SIFT_info, imageA_SIFT_descriptors = stitcher.SIFT_points_dector(imageA.copy())
-imageB_SIFT, imageB_SIFT_keypoints, imageB_SIFT_info, imageB_SIFT_descriptors = stitcher.SIFT_points_dector(imageB.copy())
-imageA_ORB, imageA_ORB_keypoints, imageA_ORB_descriptors = stitcher.ORB_points_dector(imageA.copy())
-imageB_ORB, imageB_ORB_keypoints, imageB_ORB_descriptors = stitcher.ORB_points_dector(imageB.copy())
-SIFT_ssd_matches = stitcher.match_descriptors_ssd(imageA_SIFT_descriptors, imageB_SIFT_descriptors)
-SIFT_ssd_match_img = cv.drawMatches(imageA, imageA_SIFT_keypoints, imageB, imageB_SIFT_keypoints, SIFT_ssd_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-SIFT_ratio_matches = stitcher.ratio_test(imageA_SIFT_descriptors, imageB_SIFT_descriptors)
-SIFT_ratio_match_img = cv.drawMatches(imageA, imageA_SIFT_keypoints, imageB, imageB_SIFT_keypoints, SIFT_ratio_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-stitched_image = stitcher.stitch_images([imageA, imageB])
-cv.imshow("Image A", imageA_harried)
-cv.imshow("Image B", imageB_harried)
-cv.imshow("Image A SIFT", imageA_SIFT)
-cv.imshow("Image B SIFT", imageB_SIFT)
-cv.imshow("Image A ORB", imageA_ORB)
-cv.imshow("SIFT_ssd_match_img", SIFT_ssd_match_img)
-cv.imshow("SIFT_ratio_match_img", SIFT_ratio_match_img)
-cv.imshow("stitched_image ", stitched_image)
-
-cv.waitKey(0)
-cv.destroyAllWindows()
-
-# print("ImageA Harris Corners Locations:")
-# for corner in imageA_corners:
-#     y, x = corner
-#     print(f"({x}, {y})")
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-f", "--first", required=True, help="path to the first image")
+# ap.add_argument("-s", "--second", required=True, help="path to the second image")
+# args = vars(ap.parse_args())
 #
-# print("ImageB Harris Corners Locations:")
-# for corner in imageB_corners:
-#     y, x = corner
-#     print(f"({x}, {y})")
-# print("SIFT关键点坐标和方向（图像A）:")
-# for pt, angle in imageB_SIFT_info:
-#     print(f"location: ({pt[0]}, {pt[1]}), orientation: {angle}")
+# imageA = cv.imread(args["first"])
+# imageB = cv.imread(args["second"])
+# # imageA = imutils.resize(imageA, width=400)
+# # imageB = imutils.resize(imageB, width=400)
+# stitcher = Sticher()
+# imageA_corners, imageA_harried = stitcher.harries_corner_dector(imageA.copy())
+# imageB_corners, imageB_harried = stitcher.harries_corner_dector(imageB.copy())
+# imageA_SIFT, imageA_SIFT_keypoints, imageA_SIFT_info, imageA_SIFT_descriptors = stitcher.SIFT_points_dector(imageA.copy())
+# imageB_SIFT, imageB_SIFT_keypoints, imageB_SIFT_info, imageB_SIFT_descriptors = stitcher.SIFT_points_dector(imageB.copy())
+# imageA_ORB, imageA_ORB_keypoints, imageA_ORB_descriptors = stitcher.ORB_points_dector(imageA.copy())
+# imageB_ORB, imageB_ORB_keypoints, imageB_ORB_descriptors = stitcher.ORB_points_dector(imageB.copy())
+# SIFT_ssd_matches = stitcher.match_descriptors_ssd(imageA_SIFT_descriptors, imageB_SIFT_descriptors)
+# SIFT_ssd_match_img = cv.drawMatches(imageA, imageA_SIFT_keypoints, imageB, imageB_SIFT_keypoints, SIFT_ssd_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+# SIFT_ratio_matches = stitcher.ratio_test(imageA_SIFT_descriptors, imageB_SIFT_descriptors)
+# SIFT_ratio_match_img = cv.drawMatches(imageA, imageA_SIFT_keypoints, imageB, imageB_SIFT_keypoints, SIFT_ratio_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+# stitched_image = stitcher.stitch_images([imageA, imageB])
+# cv.imshow("Image A", imageA_harried)
+# cv.imshow("Image B", imageB_harried)
+# cv.imshow("Image A SIFT", imageA_SIFT)
+# cv.imshow("Image B SIFT", imageB_SIFT)
+# cv.imshow("Image A ORB", imageA_ORB)
+# cv.imshow("SIFT_ssd_match_img", SIFT_ssd_match_img)
+# cv.imshow("SIFT_ratio_match_img", SIFT_ratio_match_img)
+# cv.imshow("stitched_image ", stitched_image)
 #
-# print("SIFT关键点坐标和方向（图像B）:")
-# for pt, angle in imageB_SIFT_info:
-#     print(f"location: ({pt[0]}, {pt[1]}), orientation: {angle}")
+# cv.waitKey(0)
+# cv.destroyAllWindows()
+#
+# # print("ImageA Harris Corners Locations:")
+# # for corner in imageA_corners:
+# #     y, x = corner
+# #     print(f"({x}, {y})")
+# #
+# # print("ImageB Harris Corners Locations:")
+# # for corner in imageB_corners:
+# #     y, x = corner
+# #     print(f"({x}, {y})")
+# # print("SIFT关键点坐标和方向（图像A）:")
+# # for pt, angle in imageB_SIFT_info:
+# #     print(f"location: ({pt[0]}, {pt[1]}), orientation: {angle}")
+# #
+# # print("SIFT关键点坐标和方向（图像B）:")
+# # for pt, angle in imageB_SIFT_info:
+# #     print(f"location: ({pt[0]}, {pt[1]}), orientation: {angle}")
