@@ -3,15 +3,16 @@ from tkinter import filedialog, Toplevel, Text
 from PIL import Image, ImageTk
 import cv2 as cv
 import numpy as np
-from computer_vision_assignment import Sticher  # 导入 Sticher 类
+from computer_vision_assignment import Sticher
+
 
 class ImageUploaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Uploader")
 
-        # 设置初始窗口大小
-        self.root.geometry("800x600")  # 宽x高
+        # Set window size
+        self.root.geometry("800x494")  # width x Height
 
         self.sticher = Sticher()
 
@@ -39,8 +40,9 @@ class ImageUploaderApp:
         self.right_sift_button = tk.Button(right_button_frame, text="Process Right Image SIFT", command=self.process_right_image_sift)
         self.right_sift_button.pack(side=tk.LEFT, padx=5)
 
-        self.right_image_label = tk.Label(root, text="")
-        self.right_image_label.pack(pady=20)
+        # self.right_image_label = tk.Label(root, text="")
+        # self.right_image_label.pack(pady=20)
+        tk.Label(root).pack(pady=10)
 
         matches_button_frame = tk.Frame(root)
         matches_button_frame.pack(pady=5)
@@ -48,7 +50,7 @@ class ImageUploaderApp:
         self.sift_ssd_button.pack(side=tk.LEFT,pady=5)
         self.sift_ratio_button = tk.Button(matches_button_frame, text="SIFT_Ratio_Matches", command=self.process_sift_ratio_matches)
         self.sift_ratio_button.pack(side=tk.LEFT,pady=5)
-        self.orb_ssd_button = tk.Button(matches_button_frame, text="ORB_SSD_Matches", command=self.process_orb_ssd_matches)
+        self.orb_ssd_button = tk.Button(matches_button_frame, text="ORB_Matches", command=self.process_orb_ssd_matches)
         self.orb_ssd_button.pack(side=tk.LEFT,pady=5)
         self.orb_ratio_button = tk.Button(matches_button_frame, text="ORB_Ratio_Matches", command=self.process_orb_ratio_matches)
         self.orb_ratio_button.pack(side=tk.LEFT,pady=5)
@@ -105,7 +107,7 @@ class ImageUploaderApp:
             image_right = cv.imread(self.right_image_path)
             _, keypoints_left, _, descriptors_left = self.sticher.SIFT_points_dector(image_left.copy())
             _, keypoints_right, _, descriptors_right = self.sticher.SIFT_points_dector(image_right.copy())
-            matches = self.sticher.match_descriptors_ssd(descriptors_left, descriptors_right)
+            matches = self.sticher.match_descriptors_ssd(descriptors_left, descriptors_right, ORB=False)
 
             matched_image = cv.drawMatches(image_left.copy(), keypoints_left, image_right.copy(), keypoints_right, matches, None,
                                            flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
@@ -117,7 +119,7 @@ class ImageUploaderApp:
             image_right = cv.imread(self.right_image_path)
             _, keypoints_left, _, descriptors_left = self.sticher.SIFT_points_dector(image_left.copy())
             _, keypoints_right, _, descriptors_right = self.sticher.SIFT_points_dector(image_right.copy())
-            matches = self.sticher.ratio_test(descriptors_left, descriptors_right)
+            matches = self.sticher.ratio_test(descriptors_left, descriptors_right, ORB=False)
 
             matched_image = cv.drawMatches(image_left.copy(), keypoints_left, image_right.copy(), keypoints_right, matches, None,
                                            flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
@@ -129,11 +131,11 @@ class ImageUploaderApp:
             image_right = cv.imread(self.right_image_path)
             _, keypoints_left, descriptors_left = self.sticher.ORB_points_dector(image_left.copy())
             _, keypoints_right, descriptors_right = self.sticher.ORB_points_dector(image_right.copy())
-            matches = self.sticher.match_descriptors_ssd(descriptors_left, descriptors_right)
+            matches = self.sticher.match_descriptors_ssd(descriptors_left, descriptors_right, ORB = True)
 
             matched_image = cv.drawMatches(image_left.copy(), keypoints_left, image_right.copy(), keypoints_right, matches, None,
                                            flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-            self.display_processed_image(matched_image, "SIFT SSD Matches")
+            self.display_processed_image(matched_image, "ORB Matches")
 
     def process_orb_ratio_matches(self):
         if self.left_image_path and self.right_image_path:
@@ -141,7 +143,7 @@ class ImageUploaderApp:
             image_right = cv.imread(self.right_image_path)
             _, keypoints_left, descriptors_left = self.sticher.ORB_points_dector(image_left.copy())
             _, keypoints_right, descriptors_right = self.sticher.ORB_points_dector(image_right.copy())
-            matches = self.sticher.ratio_test(descriptors_left, descriptors_right)
+            matches = self.sticher.ratio_test(descriptors_left, descriptors_right, ORB=True)
 
             matched_image = cv.drawMatches(image_left.copy(), keypoints_left, image_right.copy(), keypoints_right,
                                            matches, None,
@@ -152,7 +154,7 @@ class ImageUploaderApp:
         if self.left_image_path and self.right_image_path:
             image_left = cv.imread(self.left_image_path)
             image_right = cv.imread(self.right_image_path)
-            stitched_image = self.sticher.stitch_images([image_left, image_right])
+            stitched_image = self.sticher.stitch_images([image_left.copy(), image_right.copy()])
             self.display_processed_image(stitched_image, "Stitched Image")
 
     def display_processed_image(self, image, title):
