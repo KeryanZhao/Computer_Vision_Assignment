@@ -1,9 +1,6 @@
 import numpy as np
-import imutils
 import cv2 as cv
 import time
-# import argparse
-
 class Sticher:
 
     def timer(func):
@@ -17,7 +14,6 @@ class Sticher:
         return wrapper
     def harries_corner_dector(self, image):
         '''
-
         :param image: input image
         :return: Coordinates of corner points and images of labelled corner points
         '''
@@ -59,7 +55,6 @@ class Sticher:
     @timer
     def match_descriptors_ssd(self, descriptors1, descriptors2, ORB = False):
         '''
-
         :param descriptors1: descriptors of left image
         :param descriptors2: descriptors of right image
         :return:
